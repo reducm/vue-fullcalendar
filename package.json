@@ -1,7 +1,7 @@
 {
   "name": "vue-fullcalendar",
-  "version": "1.0.9",
-  "author": "Sunny Wang",
+  "version": "1.0.9-jas",
+  "author": "Sunny Wang & jas.zheng",
   "license": "MIT",
   "description": "pure vue-based fullcalendar, no jquery moment required",
   "main": "dist/vue-fullcalendar.js",
@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "es6-promise": "^4.0.5",
+    "sass": "^1.83.0",
     "vue": "^2.1.8",
     "vue-fullcalendar": "^1.0.5"
   },
@@ -37,9 +38,8 @@
     "exports-loader": "^0.6.3",
     "file-loader": "^0.8.5",
     "imports-loader": "^0.6.5",
-    "moment": "^2.17.1",
+    "moment": "^2.29.1",
     "node-libs-browser": "^0.5.3",
-    "node-sass": "^3.4.2",
     "rollup": "^0.21.0",
     "rollup-plugin-babel": "^1.0.0",
     "rollup-plugin-replace": "^1.1.0",

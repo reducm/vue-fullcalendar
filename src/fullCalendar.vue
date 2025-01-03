@@ -25,8 +25,11 @@
         <div class="dates-bg">
           <div class="week-row" v-for="week in currentDates">
             <div class="day-cell" v-for="day in week"
-                 :class="{'today' : day.isToday,
-              'not-cur-month' : !day.isCurMonth}">
+                 :class="[{
+                    'today' : day.isToday,
+                    'not-cur-month' : !day.isCurMonth
+                  }, day.classList && day.classList.length > 0 ? day.classList.join(' ') : '']"
+                  >
               <p class="day-number">{{ day.monthDay }}</p>
             </div>
           </div>
@@ -88,6 +91,10 @@
 
   export default {
     props : {
+      eventLimit: {
+        type: Number,
+        default: 3
+      },
       events : { // events will be displayed on calendar
         type : Array,
         default : []
@@ -96,6 +103,10 @@
         type : String,
         default : 'en'
       },
+      dayClasses: { // 增加的支持传不同的class到每一天, {day: moment(), classList: []}
+        type : Array,
+        default : []
+      }, 
       firstDay : {
         type : Number | String,
         validator (val) {
@@ -116,7 +127,6 @@
       return {
         currentMonth : moment().startOf('month'),
         isLismit : true,
-        eventLimit : 3,
         showMore : false,
         morePos : {
           top: 0,
@@ -145,22 +155,36 @@
       },
       getCalendar () {
         // calculate 2d-array of each month
+        // 每一天向前走
         let monthViewStartDate = dateFunc.getMonthViewStartDate(this.currentMonth, this.firstDay);
         let calendar = [];
+        let today = moment();
 
         for(let perWeek = 0 ; perWeek < 6 ; perWeek++) {
           let week = [];
 
           for(let perDay = 0 ; perDay < 7 ; perDay++) {
+            // 这里就是day
+            let classList = []
+
+            // 新逻辑
+            if(this.dayClasses.length > 0) {
+              const result = this.dayClasses.filter(item =>  item.day && item.day.isSame ? item.day.isSame(monthViewStartDate, 'day') : false)
+              if(result.length > 0) {
+                classList = result[0].classList || []
+              }
+            }
+
             week.push({
               monthDay : monthViewStartDate.date(),
-              isToday : monthViewStartDate.isSame(moment(), 'day'),
+              isToday : monthViewStartDate.isSame(today, 'day'),
               isCurMonth : monthViewStartDate.isSame(this.currentMonth, 'month'),
               weekDay : perDay,
               date : moment(monthViewStartDate),
-              events : this.slotEvents(monthViewStartDate)
+              events : this.slotEvents(monthViewStartDate),
+              classList,
             });
-
+            // 每一天向前走
             monthViewStartDate.add(1, 'day');
           }
 
@@ -205,6 +229,7 @@
       },
       selectThisDay (day, jsEvent) {
         this.selectDay = day;
+        // 这里会显示一个showMore的弹窗
         this.showMore = true;
         this.morePos = this.computePos(event.target);
         this.morePos.top -= 100;

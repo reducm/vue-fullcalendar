@@ -1,3 +1,20 @@
+
+## change and use
+
+支持mac下面用docker去build
+
+```bash
+docker run --rm -ti -v $(pwd):/var/www yunbaoguan/node-sass /bin/sh
+
+# 这部分已经更新到package.json
+# npm uninstall node-sass
+# npm install sass
+
+npm install
+npm run build
+```
+
+
 ##vue-fullcalendar
 
 [![npm](https://img.shields.io/npm/v/vue-fullcalendar.svg?maxAge=2592000?style=flat-square)]()
